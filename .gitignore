@@ -1,0 +1,4 @@
+.env
+development-docker-compose.yaml
+/node_modules
+/data

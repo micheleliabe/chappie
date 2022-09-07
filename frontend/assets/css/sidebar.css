@@ -1,0 +1,14 @@
+
+#sidebar {
+    min-height: 100vh;
+}
+
+#sideBarContent {
+    position: relative;
+    margin-top:6rem;
+}
+
+.list-group-item{
+    border: none;
+}
+

@@ -1,0 +1,15 @@
+<script src="/entry.js"></script>
+<script src="/dashboard.js"></script>
+
+<%- include('../includes/nav')%>
+<div id="panel" class="container-fluid">
+    <div class="row" id="dados">
+        <%- include('../includes/sidebar')%>
+        <div id="container" class="col-sm-12  col-md-8 col-lg-9 col-xl-10" id="content">
+            <div id="containerContent" class=" mh-100vh mb-5">
+                <%- body %>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../includes/footer')%>

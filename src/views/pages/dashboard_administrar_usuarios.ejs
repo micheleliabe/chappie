@@ -1,0 +1,177 @@
+<link rel="stylesheet" href="/tabulator.min.css">
+<link href="/tabulator_bootstrap.min.css" rel="stylesheet">
+
+
+
+
+<div class="container-fluid">
+  <div class="card">
+
+    <div class="card-header">
+      <h4 class="m-0">Add new users</h4>
+      <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="m-0 p-0">
+        <ol class="breadcrumb mt-1">
+          <li class="breadcrumb-item"><a href="/dashboard">Chappie</a></li>
+          <li class="breadcrumb-item"><a href="">Admin</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Users</li>
+        </ol>
+      </nav>
+    </div>
+    
+
+    <div class="card-body">
+      <button type="submit" class="mt-2 btn btn-primary" id="btn_add_user">Add new</button>
+
+      <div class="row">
+
+        <div class="col-9">
+
+          <div class="card mt-3">
+            <div class="card-body m-3">
+              <h5 class="card-title">Active users</h5>
+              <p class="card-text"></p>
+
+              <div id="table-users"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-3">
+          <div class="card mt-3">
+            <div class="chart-container m-2 p-3">
+              <canvas id="usersChart" width="600" height="600"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    
+  </div>
+  
+  
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAddUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="modalAddUserLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAddUserLabel">Add user</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="">
+          <div class="row">
+            <div class="col">
+
+              <form class="needs-validation" novalidate id="form_add_user">
+                <input type="hidden" id="_csrf" name="_csrf" value=<%= csrfToken %>>
+                <input type="hidden" id="_id" name="_id" value=''>
+                <div class="col-12">
+
+                  <%- include ('../includes/messages') %>
+
+                  <div class="row g-3">
+
+                    <div class="col-sm-12 col-md-4">
+                      <label for="firstName" class="form-label">Name</label>
+                      <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" value=""
+                        required>
+
+                      <div class="invalid-feedback">
+                        Enter the name.
+                      </div>
+
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                      <label for="lastName" class="form-label">Last name</label>
+                      <input type="text" class="form-control" id="lastName" placeholder="" name="lastName" value=""
+                        required>
+                      <div class="invalid-feedback">
+                        Enter the last name
+                      </div>
+
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                      <label for="username" class="form-label">Username</label>
+
+                      <div class="input-group has-validation">
+                        <span class="input-group-text">@</span>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username"
+                          required>
+
+                        <div class="invalid-feedback">
+                          Enter the username.
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                      <label for="email" class="form-label">Email <span class="text-muted"></span></label>
+                      <input type="email" class="form-control" id="email" name="email" placeholder="email@chappie.com"
+                        required>
+
+                      <div class="invalid-feedback">
+                        Enter a valid email address.
+                      </div>
+
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                      <label for="password" class="form-label">Password</label>
+                      <input type="password" class="form-control" id="password" name="password" required>
+                      <div class="invalid-feedback">
+                        Enter a password.
+                      </div>
+                    </div>
+
+                    <div class="m-2 form-check">
+                      <input type="checkbox" class="form-check-input" id="isAdminCheck" name="isAdministrator">
+                      <label class="form-check-label" for="isAdminCheck">Administrator privileges</label>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+
+        <button type="submit" class="mt-2 btn btn-primary" id="btn_save_user">Save</button>
+        <button type="" class="mt-2 btn btn-danger" id="btn_remove_user">
+          <svg class="bi text-light" width="23" height="23" fill="currentColor">
+            <use xlink:href="/bootstrap-icons.svg#trash" />
+          </svg>
+        </button>
+
+      </div>
+
+
+    </div>
+  </div>
+
+
+</div>
+
+
+
+
+<script type='text/javascript' src="/tabulator.min.js"></script>
+<script src="/dashboard_administrar_usuarios.js"></script>

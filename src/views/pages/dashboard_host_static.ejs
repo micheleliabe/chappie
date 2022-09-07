@@ -1,0 +1,852 @@
+<link rel="stylesheet" href="/tabulator.min.css">
+<link href="/tabulator_bootstrap.min.css" rel="stylesheet">
+
+
+
+<div class="row">
+  <!-- Formulario -->
+  <div class="col-sm-12 col-md-12 col-lg-8">
+    <div class="card">
+      <div class="card-header">
+
+        <h4 class="m-0">Hospedar um site estático</h4>
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="m-0 p-0">
+          <ol class="breadcrumb mt-1">
+            <li class="breadcrumb-item"><a href="/dashboard">Chappie</a></li>
+            <li class="breadcrumb-item"><a href="/host">Hospedagem</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Sites estáticos</li>
+          </ol>
+        </nav>
+
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+
+          <form class="needs-validation" novalidate id="form_add_user">
+            <input type="hidden" id="_csrf" name="_csrf" value=<%= csrfToken %>>
+
+            <div class="col-12">
+
+              <%- include ('../includes/messages') %>
+
+              <!-- DADOS DO PROJETO -->
+              <div class="row">
+                <div class="col-12">
+
+                  <!-- DADOS REGISTRO DOMINIO -->
+                  <p class="lead">Como você deseja configurar o dominio ?</p>
+                  <div class="row mt-3">
+
+                    <div class="col-sm-6 mt-1 ">
+                      <div class="card card_select_option h-100 list-group-item-action border-primary active" id="card_registrar_dominio">
+                        <div class="card-body">
+                          <h5 class="card-title">Registrar um dominio</h5>
+                          <p class="card-text">O Chappie irá registrar um dominio pra você no Route53 da Amazon</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6 mt-1">
+                      <div class="card card_select_option h-100 list-group-item-action" id="card_dominio_existente">
+                        <div class="card-body">
+                          <h5 class="card-title">Utilizar um domínio existente</h5>
+                          <p class="card-text">O chappie vai tentar configurar o DNS para você</p>
+                          <p class="form-text text-muted">
+                            *O domínio precisa estar registrado na conta da AWS de sua organização.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group input-group-lg mt-4">
+                    <label for="DomainName">Nome de domínio</label>
+                    <input type="text" class="form-control" name="DomainName" id="DomainName" aria-describedby="helpId">
+                      
+                      <div class="invalid-feedback" id="dominio_indisponivel">
+                        Este dominio não esta disponvel
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="list-group mt-3" id="sugestoes_dominio">
+                  </div>
+
+                  <div class="domainRegister">
+
+                    <div class="form-check form-check-inline mt-3">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="AutoRenew" id="AutoRenew"
+                          value="checkedValue"> Renovar automaticamente
+                      </label>
+                      <p class="form-text text-muted">
+                        Será renovado automaticamente a cada um ano
+                      </p>
+                    </div>
+
+                    <div class="accordion accordion-flush " id="accordionFlushContatoDominio">
+                      <p class="lead mt-4">Contato</p>
+
+
+                      <!-- <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="switch-utilizar-dados-conta">
+                        <label class="form-check-label" for="switch-utilizar-dados-conta">Utilizar dados da conta Root</label>
+                      </div> -->
+
+
+                      <!-- REGISTRANTE -->
+                      <div class="accordion-item mt-3">
+                        <h2 class="accordion-header" id="flush-headingOne">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            Registrante
+                          </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse"
+                          aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushContatoDominio">
+                          <div class="accordion-body">
+
+                            <div class="row mt-3">
+                              <!-- FIRST NAME -->
+                              <div class="row m-2">
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                  <label for="registrantFirstName" class="form-label">Nome</label>
+                                  <input type="text" class="form-control" id="registrantFirstName"
+                                    name="registrantFirstName" placeholder="" value="" required>
+                                  <div class="invalid-feedback">
+                                    Informe um nome valido
+                                  </div>
+                                </div>
+
+                                
+                                <!-- LAST NAME -->
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                  <label for="registrantLastName" class="form-label">Sobrenome</label>
+                                  <input type="text" class="form-control" id="registrantLastName"
+                                    name="registrantLastName" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o sobrenome
+                                  </div>
+
+                                </div>
+
+                                <!-- ORGANIZATION NAME -->
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                  <label for="registrantOrganizationName" class="form-label">Organização</label>
+                                  <input type="text" class="form-control" id="registrantOrganizationName"
+                                    name="registrantOrganizationName" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o nome da organização
+                                  </div>
+
+                                </div>
+                              </div>
+
+                              <div class="row m-2">
+
+                                <!-- ZIP CODE -->
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                  <label for="registrantZipCode" class="form-label">Cep</label>
+                                  <input type="text" class="form-control" id="registrantZipCode"
+                                    name="registrantZipCode" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o CEP
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+
+                                <!-- LINHA DE ENDEREÇO 1 -->
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                  <label for="registrantAddressLine1" class="form-label">Linha de endereço 1</label>
+                                  <input type="text" class="form-control" id="registrantAddressLine1"
+                                    name="registrantAddressLine1" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o endereço
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+                                <!-- LINHA DE ENDEREÇO 2 -->
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                  <label for="registrantAddressLine2" class="form-label">Linha de endereço 2</label>
+                                  <input type="text" class="form-control" id="registrantAddressLine2"
+                                    name="registrantAddressLine2" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o endereço
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+
+                                <!-- CONTRY CODES -->
+                                <div class="form-group col-sm-12 col-md-12 col-lg-3">
+                                  <label for="registrantCountryCode">Codigo do país</label>
+                                  <select class="form-control mt-2" name="registrantCountryCode"
+                                    id="registrantCountryCode">
+                                    <option>BR</option>
+                                  </select>
+                                </div>
+
+                                <!-- STATE-->
+                                <div class="col-sm-12 col-md-12 col-lg-3">
+                                  <label for="registrantState" class="form-label">Estado</label>
+                                  <input type="text" class="form-control" id="registrantState" name="registrantState"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o estado
+                                  </div>
+
+                                </div>
+
+                                <!-- CIDADE-->
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                  <label for="registrantCity" class="form-label">Cidade</label>
+                                  <input type="text" class="form-control" id="registrantCity" name="registrantCity"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe a cidade
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+
+                              <div class="row m-2">
+
+                                <!-- CONTACT TYPE -->
+                                <div class="form-group col-sm-12 col-md-12 col-lg-4">
+                                  <label for="registrantContactType">ContactType</label>
+                                  <select class="form-control mt-2" name="registrantContactType"
+                                    id="registrantContactType">
+                                    <option>PERSON</option>
+                                    <option>COMPANY</option>
+                                    <option>ASSOCIATION</option>
+                                    <option>PUBLIC_BODY</option>
+                                    <option>RESELLER</option>
+                                  </select>
+                                </div>
+
+                                <!-- EMAIL -->
+                                <div class="col-sm-12 col-md-12 col-lg-8">
+                                  <label for="registrantEmail" class="form-label">Email</label>
+                                  <input type="text" class="form-control" id="registrantEmail" name="registrantEmail"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o Email
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                  <label for="registrantFax" class="form-label">Fax</label>
+                                  <input type="text" class="form-control" id="registrantFax" name="registrantFax"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o Fax
+                                  </div>
+
+                                </div>
+
+                                <!-- PHONE NUMBER-->
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                  <label for="registrantPhoneNumber" class="form-label">Telefone</label>
+                                  <input type="text" class="form-control" id="registrantPhoneNumber"
+                                    name="registrantPhoneNumber" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe um numero de telefone
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                      <!-- ADMIN -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingTwo">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                            Administrativo
+                          </button>
+                        </h2>
+                        <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                          aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushContatoDominio">
+                          <div class="accordion-body">
+                            <div class="row mt-3">
+
+                              <!-- FIRST NAME -->
+                              <div class="row m-2">
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                  <label for="adminFirstName" class="form-label">Nome</label>
+                                  <input type="text" class="form-control" id="adminFirstName" name="adminFirstName"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o nome
+                                  </div>
+
+                                </div>
+
+                                <!-- LAST NAME -->
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                  <label for="adminLastName" class="form-label">Sobrenome</label>
+                                  <input type="text" class="form-control" id="adminLastName" name="adminLastName"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o sobrenome
+                                  </div>
+
+                                </div>
+
+                                <!-- ORGANIZATION NAME -->
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                  <label for="adminOrganizationName" class="form-label">Organização</label>
+                                  <input type="text" class="form-control" id="adminOrganizationName"
+                                    name="adminOrganizationName" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o nome da organização
+                                  </div>
+
+                                </div>
+                              </div>
+
+                              <div class="row m-2">
+
+                                <!-- ZIP CODE -->
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                  <label for="adminZipCode" class="form-label">Cep</label>
+                                  <input type="text" class="form-control" id="adminZipCode" name="adminZipCode"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o CEP
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+
+                                <!-- LINHA DE ENDEREÇO 1 -->
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                  <label for="adminAddressLine1" class="form-label">Linha de endereço 1</label>
+                                  <input type="text" class="form-control" id="adminAddressLine1"
+                                    name="adminAddressLine1" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o endereço
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+                                <!-- LINHA DE ENDEREÇO 2 -->
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                  <label for="adminAddressLine2" class="form-label">Linha de endereço 2</label>
+                                  <input type="text" class="form-control" id="adminAddressLine2"
+                                    name="adminAddressLine2" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o endereço
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+
+                                <!-- CONTRY CODES -->
+                                <div class="form-group col-sm-12 col-md-12 col-lg-3">
+                                  <label for="adminCountryCode">Codigo do país</label>
+                                  <select class="form-control mt-2" name="adminCountryCode" id="adminCountryCode">
+                                    <option>BR</option>
+                                  </select>
+                                </div>
+
+
+                                <!-- STATE-->
+                                <div class="col-sm-12 col-md-12 col-lg-3">
+                                  <label for="adminState" class="form-label">Estado</label>
+                                  <input type="text" class="form-control" id="adminState" name="adminState"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o estado
+                                  </div>
+
+                                </div>
+
+                                <!-- CIDADE-->
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                  <label for="adminCity" class="form-label">Cidade</label>
+                                  <input type="text" class="form-control" id="adminCity" name="adminCity" placeholder=""
+                                    value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe a cidade
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+
+                              <div class="row m-2">
+
+                                <!-- CONTACT TYPE -->
+                                <div class="form-group col-sm-12 col-md-12 col-lg-4">
+                                  <label for="adminContactType">ContactType</label>
+                                  <select class="form-control mt-2" name="adminContactType" id="adminContactType">
+                                    <option>PERSON</option>
+                                    <option>COMPANY</option>
+                                    <option>ASSOCIATION</option>
+                                    <option>PUBLIC_BODY</option>
+                                    <option>RESELLER</option>
+                                  </select>
+                                </div>
+
+                                <!-- EMAIL -->
+                                <div class="col-sm-12 col-md-12 col-lg-8">
+                                  <label for="adminEmail" class="form-label">Email</label>
+                                  <input type="text" class="form-control" id="adminEmail" name="adminEmail"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o Email
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                  <label for="adminFax" class="form-label">Fax</label>
+                                  <input type="text" class="form-control" id="adminFax" name="adminFax" placeholder=""
+                                    value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o Fax
+                                  </div>
+
+                                </div>
+
+                                <!-- PHONE NUMBER-->
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                  <label for="adminPhoneNumber" class="form-label">Telefone</label>
+                                  <input type="text" class="form-control" id="adminPhoneNumber" name="adminPhoneNumber"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe um numero de telefone
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                      <!-- TECNICO -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingThree">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseThree" aria-expanded="false"
+                            aria-controls="flush-collapseThree">
+                            Técnico
+                          </button>
+                        </h2>
+                        <div id="flush-collapseThree" class="accordion-collapse collapse"
+                          aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushContatoDominio">
+                          <div class="accordion-body">
+                            <div class="row mt-3">
+
+                              <!-- FIRST NAME -->
+                              <div class="row m-2">
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                  <label for="techFirstName" class="form-label">Nome</label>
+                                  <input type="text" class="form-control" id="techFirstName" name="techFirstName"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o nome
+                                  </div>
+
+                                </div>
+
+                                <!-- LAST NAME -->
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                  <label for="techLastName" class="form-label">Sobrenome</label>
+                                  <input type="text" class="form-control" id="techLastName" name="techLastName"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o sobrenome
+                                  </div>
+
+                                </div>
+
+                                <!-- ORGANIZATION NAME -->
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                  <label for="techOrganizationName" class="form-label">Organização</label>
+                                  <input type="text" class="form-control" id="techOrganizationName"
+                                    name="techOrganizationName" placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o nome da organização
+                                  </div>
+
+                                </div>
+                              </div>
+
+                              <div class="row m-2">
+
+                                <!-- ZIP CODE -->
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                  <label for="techZipCode" class="form-label">Cep</label>
+                                  <input type="text" class="form-control" id="techZipCode" name="techZipCode"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o CEP
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+
+                                <!-- LINHA DE ENDEREÇO 1 -->
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                  <label for="techAddressLine1" class="form-label">Linha de endereço 1</label>
+                                  <input type="text" class="form-control" id="techAddressLine1" name="techAddressLine1"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o endereço
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+                                <!-- LINHA DE ENDEREÇO 2 -->
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                  <label for="techAddressLine2" class="form-label">Linha de endereço 2</label>
+                                  <input type="text" class="form-control" id="techAddressLine2" name="techAddressLine2"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o endereço
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+
+                                <!-- CONTRY CODES -->
+                                <div class="form-group col-sm-12 col-md-12 col-lg-3">
+                                  <label for="techCountryCode">Codigo do país</label>
+                                  <select class="form-control mt-2" name="techCountryCode" id="techCountryCode">
+                                    <option>BR</option>
+                                  </select>
+                                </div>
+
+                                <!-- STATE-->
+                                <div class="col-sm-12 col-md-12 col-lg-3">
+                                  <label for="techState" class="form-label">Estado</label>
+                                  <input type="text" class="form-control" id="techState" name="techState" placeholder=""
+                                    value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o estado
+                                  </div>
+
+                                </div>
+
+                                <!-- CIDADE-->
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                  <label for="techCity" class="form-label">Cidade</label>
+                                  <input type="text" class="form-control" id="techCity" name="techCity" placeholder=""
+                                    value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe a cidade
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+
+                              <div class="row m-2">
+
+                                <!-- CONTACT TYPE -->
+                                <div class="form-group col-sm-12 col-md-12 col-lg-4">
+                                  <label for="techContactType">ContactType</label>
+                                  <select class="form-control mt-2" name="techContactType" id="techContactType">
+                                    <option>PERSON</option>
+                                    <option>COMPANY</option>
+                                    <option>ASSOCIATION</option>
+                                    <option>PUBLIC_BODY</option>
+                                    <option>RESELLER</option>
+                                  </select>
+                                </div>
+
+                                <!-- EMAIL -->
+                                <div class="col-sm-12 col-md-12 col-lg-8">
+                                  <label for="techEmail" class="form-label">Email</label>
+                                  <input type="text" class="form-control" id="techEmail" name="techEmail" placeholder=""
+                                    value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o Email
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                              <div class="row m-2">
+
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                  <label for="techFax" class="form-label">Fax</label>
+                                  <input type="text" class="form-control" id="techFax" name="techFax" placeholder=""
+                                    value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe o Fax
+                                  </div>
+
+                                </div>
+
+                                <!-- PHONE NUMBER-->
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                  <label for="techPhoneNumber" class="form-label">Telefone</label>
+                                  <input type="text" class="form-control" id="techPhoneNumber" name="techPhoneNumber"
+                                    placeholder="" value="" required>
+
+                                  <div class="invalid-feedback">
+                                    Informe um numero de telefone
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p class="lead mt-4">Privacidade</p>
+                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                      <strong>Dica</strong>
+                      <p class="form-text text-muted">
+                        O Route 53 oferece proteção de privacidade, que oculta o telefone, o endereço de e-mail e o
+                        endereço físico pessoais.
+                        Em vez disso, o Whois contém o nome e o endereço de correspondência do registrante, juntamente
+                        com
+                        um endereço de encaminhamento de e-mail gerado pelo registrante...
+                      </p>
+                      <a href="https://aws.amazon.com/pt/route53/faqs/">Mais informações</a>
+                    </div>
+
+                    <label>Para quem você deseja ativar a proteção de privacidade ?</label>
+
+                    <div class="form-check mt-2">
+                      <label class="form-check-label" for="PrivacyProtectAdminContact">
+                        <input type="checkbox" class="form-check-input" name="PrivacyProtectAdminContact"
+                          id="PrivacyProtectAdminContact" value="checkedValue" checked>
+                        Administrador
+                      </label>
+                    </div>
+
+                    <div class="form-check">
+                      <label class="form-check-label" for="PrivacyProtectRegistrantContact">
+                        <input type="checkbox" class="form-check-input" name="PrivacyProtectRegistrantContact"
+                          id="PrivacyProtectRegistrantContact" value="checkedValue" checked>
+                        Registrante
+                      </label>
+                    </div>
+
+                    <div class="form-check">
+                      <label class="form-check-label" for="PrivacyProtectTechContact">
+                        <input type="checkbox" class="form-check-input" name="PrivacyProtectTechContact"
+                          id="PrivacyProtectTechContact" value="checkedValue" checked>
+                        Técnico
+                      </label>
+                    </div>
+
+                  </div>
+
+                  <hr class="mb-3">
+                  <!-- DADOS PARA CONFIGURAÇÃO DO SITE -->
+                  <div class="row mt-3">
+
+                    <div class="col-sm-12 col-md-12 col-lg-4">
+                      <label for="project_name" class="form-label">Nome do projeto</label>
+                      <input type="text" class="form-control" id="project" name="project_name" placeholder="" value=""
+                        required>
+
+                      <div class="invalid-feedback">
+                        Informe o nome do projeto.
+                      </div>
+
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-4">
+                      <label for="domain_name" class="form-label">Cliente</label>
+                      <input type="text" class="form-control" id="responsavel" placeholder="" name="responsavel" value=""
+                        required>
+
+                      <div class="invalid-feedback">
+                        Informe o domínio
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg-4">
+                      <label for="site_region" class="form-label">Região AWS</label>
+                      <select id="region" class="form-select">
+                        <option value="us-east-1">us-east-1</option>
+                      </select>
+
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+
+            <!-- FILE POND UPLOADER -->
+            <div class="card p-3 mt-3">
+              <input type="file" class="filepond" name="filepond" multiple data-allow-reorder="true" webkitdirectory
+                multiple>
+
+              <style>
+                .filepond--root {
+                  max-height: 20em;
+                }
+              </style>
+
+            </div>
+
+            <!-- Descrição do status -->
+            <p class="mt-2 form-text text-muted" id="status_text">
+              ...
+            </p>
+            <div class="col-12 mt-3" style="text-align: right;">
+
+              <!-- Barra de progresso -->
+             
+
+              <div class="progress mb-2">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="progress"></div>
+              </div>
+
+              <button class="btn btn-primary" type="button" id="btn_publicar_loading" hidden disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Processando...
+              </button>
+
+              <button class="btn btn-primary" type="submit" id="btn_publicar">
+                Publicar site
+              </button>
+
+              <!-- <button type="submit" class="mt-2 btn btn-primary">Publicar site</button> -->
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Card lateral - uso futuro -->
+  <div class="col-sm-12 col-md-4 col-lg-4">
+    <!-- <div class="card p">
+      <div id="xterm-container"></div>
+    </div> -->
+
+    <div class="list-group" id="list_status">
+    
+    </div>
+
+  </div>
+
+</div>
+
+<a href="#" style="position:fixed;width:50px;height:50 px;bottom:40px;right:40px;background-color:#0d6efd;color:#FFF;border-radius:50px;text-align:center;font-size:30px;box-shadow: 1px 1px 2px #888;z-index:1000;">
+  <svg class="bi text-light" width="50" height="50 " fill="currentColor">
+    <use xlink:href="/bootstrap-icons.svg#arrow-up-short"/>
+  </svg>
+</a>
+
+<!-- Sites ativos
+<div class="container-fluid">
+
+  <div class="card mt-3">
+    <div class="card-body m-3">
+      <h5 class="card-title">Active sites</h5>
+      <p class="card-text">You cannot delete registered users, but it is possible to inactivate them.</p>
+
+      <div id="table-users"></div>
+    </div>
+  </div>
+
+</div> -->
+
+<script type='text/javascript' src="/tabulator.min.js"></script>
+<script src="/dashboard_host_static_sites.js"></script>
