@@ -1,32 +1,17 @@
 # Chappie
-Chappie é um projeto desenvolvido para automatizar tarefas nos principais provedores de serviços em nuvem
 
-Criando bucket...
-Liberando acesso público...
-Atribuindo políticas...
-Definindo CORS...
-Ativando armazenamento de site estático...
-Validando disponibilidade do domínio...
-Solicitando registro de domínio...
-Enviando arquivos...
-Registrando site na base de dados...
+Chappie foi meu projeto de conclusão de curso desenvolvido em minha Pós Graduação em Cloud Computing.
 
+## Objetivo
+A Ferramenta foi criada para automatizar o processo de criação de sites estáticos na AWS utilizando as melhores práticas de segurança, disponibilidade e custo.
 
+O projeto não foi desenvolvido em sua totalidade mas já possui as seguintes funcionalidades:
 
-#Variaveis de ambiente necessárias:
-    AWS_ACCESS_KEY_ID=???????????????
-    AWS_SECRET_ACCESS_KEY=???????????????
-    COMPANY=???????????????
-    CONNECTIONSTRING=mongodb://USER:PASSWORD@SERVER:27017
-    CONNECTIONSTRING_ATLAS=?????????????????
-    COGNITO_IDENTITY_POOL_ID=????????????????????????????????
-    MODE=PROD
-        
+- Criar um Bucket
+- Permitir acesso publico ao bucket
+- Aplicar políticas de segurança ao Bucket
+- Ativar o armazenamento de sites estáticos
+- Aplicar regras de CORS;
+- Envia os arquivos do site para o bucket.
 
-
-Roles:
-AmazonRoute53FullAccess 
-AmazonS3FullAccess
-
-Cognito Identity pool - federeted
-    S3FullAccess
+Mais detalhes do projeto estão disponíveis no relatório aplicado.
